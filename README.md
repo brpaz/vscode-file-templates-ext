@@ -1,5 +1,7 @@
 # File Templates VSCode Extension
 
+[![Build Status](https://travis-ci.org/brpaz/vscode-file-templates-ext.svg?branch=master)](https://travis-ci.org/brpaz/vscode-file-templates-ext)
+
 [Visual Studio code](https://code.visualstudio.com) extenstion that allows to quickly create new files based on defined templates. 
 
 Inspired by [this Atom Extension](https://atom.io/packages/file-templates).
@@ -21,19 +23,17 @@ On Visual Studio code, Press F1 to open the command menu and type ```ext install
 
 ## Usage
 
-In VSCode, right click on the folder where you want to generate the new file. You should see an option "Files : New from template". 
+* In VSCode, right click on the folder where you want to generate the new file. You should see an option "Files : New from template". 
 Selecting this option a list of available templates should appear. Just select your template and the file will be created.
 
-You can also do the same from the Command Palette. In this case the new file will be created in the root directory of the project.
+* You can also do the same from the Command Palette. In this case the new file will be created in the root directory of the project.
 
-Its also possible to do the other way around and create a template based on an open file. For that "right-click" on any opened file and you should see the option
-of the context menu.
+* Its also possible to do the other way around and create a template based on an open file. For that "right-click" on any opened file and you should see the option of the context menu.
 
 
-## FileTemplates Location.
+## Templates Location.
 
-This extension, expects the templates to be placed at the following location,
-depending of youur OS.
+By default, this extension expects the file templates to be placed at the following location, depending of youur OS:
 
 Linux:
 
