@@ -5,10 +5,10 @@
   "version": "0.1.0",
   "author": "Bruno Paz",
   "publisher": "brpaz",
-  "homepage": "https://github.com/brpaz/vscode-file-templates-extension",
+  "homepage": "https://github.com/brpaz/vscode-file-templates-ext",
   "repository": {
     "type": "git",
-    "url": "https://github.com/brpaz/vscode-file-templates-extension.git"
+    "url": "https://github.com/brpaz/vscode-file-templates-ext.git"
   },
   "license": "MIT",
   "engines": {
