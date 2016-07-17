@@ -3,19 +3,25 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-import commands = require("./commands");
+import FileFromTemplateCommand = require('./commands/fileFromTemplateCommand');
+import TemplateFromFileCommand = require('./commands/templateFromFileCommand');
 import TemplatesManager from './templatesManager';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+/**
+ * Main extension entry point.
+ * This method is called when the extension is activated (used by the first time)
+ * @export
+ * @param {vscode.ExtensionContext} context
+ */
 export function activate(context: vscode.ExtensionContext) {
 
-  let templatesManager = new TemplatesManager(vscode.workspace.getConfiguration('fileFromTemplate'));
-  templatesManager.createTemplatesDirIfNotExists();
+    // Initializes the template manager.
+    let templatesManager = new TemplatesManager(vscode.workspace.getConfiguration('fileTemplates'));
+    templatesManager.createTemplatesDirIfNotExists();
 
-  // TemplatesManager.createFileTemplatesIfNotExists()
-  // register extension commands  
-  context.subscriptions.push(vscode.commands.registerCommand('extension.newFileFromTemplate', commands.createFromTemplate.bind(undefined, templatesManager)));
+    // register extension commands
+    context.subscriptions.push(vscode.commands.registerCommand('extension.fileFromTemplate', FileFromTemplateCommand.run.bind(undefined, templatesManager)));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.templateFromFile', TemplateFromFileCommand.run.bind(undefined, templatesManager)));
 }
 
 // this method is called when your extension is deactivated
