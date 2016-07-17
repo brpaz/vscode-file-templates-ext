@@ -1,6 +1,7 @@
 # File Templates VSCode Extension
 
 [Visual Studio code](https://code.visualstudio.com) extenstion that allows to quickly create new files based on defined templates. 
+
 Inspired by [this Atom Extension](https://atom.io/packages/file-templates).
 
 ## Available Commands
@@ -10,7 +11,7 @@ Inspired by [this Atom Extension](https://atom.io/packages/file-templates).
 
 ## Screenshots
 
-![preview][images/preview01.jpg]
+![preview](images/preview01.jpg)
 
 ## Install
 
