@@ -17,7 +17,7 @@ Inspired by [this Atom Extension](https://atom.io/packages/file-templates).
 
 ## Install
 
-On Visual Studio code, Press F1 to open the command menu and type ```ext install file-from-template```.
+On Visual Studio code, Press F1 to open the command menu and type ```ext install file-templates```.
 
 **This extension was only tested on Linux. If you have a Mac or Windows and find some issue, please create a PR.**
 
