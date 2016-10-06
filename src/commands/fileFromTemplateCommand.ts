@@ -19,8 +19,8 @@ export function run(templatesManager: TemplatesManager, args: any) {
     let templates = templatesManager.getTemplates();
 
     // gets the target folder. if its invoked from a context menu,
-    // we use that reference, otherwise we use the root path
-    let targetFolder = args ? args.path : vscode.workspace.rootPath;
+    // we use that reference, otherwise we use the file system path
+    let targetFolder = args ? args.fsPath : vscode.workspace.rootPath;
 
     if (templates.length === 0) {
         let optionGoToTemplates = <vscode.MessageItem> {

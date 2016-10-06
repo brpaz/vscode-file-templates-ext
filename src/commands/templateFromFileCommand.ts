@@ -20,7 +20,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
      * if this is toggled via context menu, we can get it directly from args,
      * otherwise we will use the current active file in the editor.
      */
-    let filePath = args ? args.path : vscode.window.activeTextEditor.document.fileName;
+    let filePath = args ? args.fsPath : vscode.window.activeTextEditor.document.fileName;
     let fileName = path.basename(filePath);
 
     // ask for filename
@@ -31,7 +31,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
 
     vscode.window.showInputBox(inputOptions).then(filename => {
         let fileContents = fs.readFileSync(filePath);
-        let templateFile = path.join(templatesManager.getTemplatesDir(), filename);
+        let templateFile = path.join(templatesManager.getTemplatesDir(), path.basename(filePath));
 
         fs.writeFile(templateFile, fileContents, function (err) {
             if (err) {

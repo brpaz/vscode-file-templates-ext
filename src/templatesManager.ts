@@ -18,12 +18,18 @@ export default class TemplatesManager {
     }
 
     /**
-     * Returns a list of available templates by reading the Templates Directory.
+     * Returns a list of available file templates by reading the Templates Directory.
      * @returns string[]
      */
     public getTemplates(): string[] {
         // @TODO make this async (use promises ???)
-        return fs.readdirSync(this.getTemplatesDir());
+        let templateDir: string = this.getTemplatesDir();
+        let templateFiles: string[] = fs.readdirSync(templateDir).map(function (item) {
+            return fs.statSync(path.join(templateDir, item)).isFile() ? item : null;
+        }).filter(function (filename) {
+            return filename !== null;
+        });
+        return templateFiles;
     }
 
     /**
