@@ -23,7 +23,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
     let targetFolder = args ? args.fsPath : vscode.workspace.rootPath;
 
     if (templates.length === 0) {
-        let optionGoToTemplates = <vscode.MessageItem> {
+        let optionGoToTemplates = <vscode.MessageItem>{
             title: "Open Templates Folder"
         };
 
@@ -50,20 +50,50 @@ export function run(templatesManager: TemplatesManager, args: any) {
         }
 
         // ask for filename
-        let inputOptions = <vscode.InputBoxOptions> {
+        let inputOptions = <vscode.InputBoxOptions>{
             prompt: "Please enter the desired filename",
             value: selection,
         };
 
         vscode.window.showInputBox(inputOptions).then(filename => {
             let fileContents = templatesManager.getTemplate(selection);
+            const className = filename.replace(/\.[^/.]+$/, "");
+            const expression = /#{(\w+)}/g;
+            const resultsPromise = [];
+            let regexResult;
 
-            fs.writeFile(path.join(targetFolder, filename), fileContents, function (err) {
-                if (err) {
-                    vscode.window.showErrorMessage(err.message);
+            while (regexResult = expression.exec(fileContents)) {
+                const variableName = regexResult[1];
+                const regex = new RegExp(`#{${variableName}}`, 'g');
+                if (variableName !== "filename") {
+                    let variableInput = <vscode.InputBoxOptions>{
+                        prompt: `Please enter the desired value for "${variableName}"`
+                    };
+                    let variablePromise = new Promise((resolve, reject) => {
+                        vscode.window.showInputBox(variableInput).then(value => {
+                            if (!value) {
+                                return;
+                            }
+                            fileContents = fileContents.replace(regex, value);
+                            console.log(fileContents, value);
+                            resolve(fileContents);
+                        });
+                    });
+                    resultsPromise.push(variablePromise);
+                } else {
+                    fileContents = fileContents.replace(regex, className);
                 }
-                vscode.window.showInformationMessage(filename + " created");
-            });
+            }
+
+            Promise.all(resultsPromise).then(() => {
+                fs.writeFile(path.join(targetFolder, filename), fileContents, function (err) {
+                    if (err) {
+                        vscode.window.showErrorMessage(err.message);
+                    }
+                    vscode.window.showInformationMessage(filename + " created");
+                });
+            })
+
         });
     });
 }
