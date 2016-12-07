@@ -75,7 +75,6 @@ export function run(templatesManager: TemplatesManager, args: any) {
                                 return;
                             }
                             fileContents = fileContents.replace(regex, value);
-                            console.log(fileContents, value);
                             resolve(fileContents);
                         });
                     });
