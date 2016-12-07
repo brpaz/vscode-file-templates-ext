@@ -23,7 +23,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
     let targetFolder = args ? args.fsPath : vscode.workspace.rootPath;
 
     if (templates.length === 0) {
-        let optionGoToTemplates = <vscode.MessageItem>{
+        let optionGoToTemplates = <vscode.MessageItem> {
             title: "Open Templates Folder"
         };
 
@@ -50,7 +50,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
         }
 
         // ask for filename
-        let inputOptions = <vscode.InputBoxOptions>{
+        let inputOptions = <vscode.InputBoxOptions> {
             prompt: "Please enter the desired filename",
             value: selection,
         };
@@ -60,13 +60,13 @@ export function run(templatesManager: TemplatesManager, args: any) {
             const className = filename.replace(/\.[^/.]+$/, "");
             const expression = /#{(\w+)}/g;
             const resultsPromise = [];
-            let regexResult;
+            let regexResult = expression.exec(fileContents);
 
-            while (regexResult = expression.exec(fileContents)) {
+            while (regexResult) {
                 const variableName = regexResult[1];
-                const regex = new RegExp(`#{${variableName}}`, 'g');
+                const regex = new RegExp(`#{${variableName}}`, "g");
                 if (variableName !== "filename") {
-                    let variableInput = <vscode.InputBoxOptions>{
+                    let variableInput = <vscode.InputBoxOptions> {
                         prompt: `Please enter the desired value for "${variableName}"`
                     };
                     let variablePromise = new Promise((resolve, reject) => {
@@ -82,6 +82,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
                 } else {
                     fileContents = fileContents.replace(regex, className);
                 }
+                regexResult = expression.exec(fileContents);
             }
 
             Promise.all(resultsPromise).then(() => {
@@ -91,7 +92,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
                     }
                     vscode.window.showInformationMessage(filename + " created");
                 });
-            })
+            });
 
         });
     });
