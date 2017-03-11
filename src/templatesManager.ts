@@ -3,7 +3,6 @@ import {WorkspaceConfiguration} from 'vscode';
 import fs = require('fs');
 import path = require('path');
 import os = require('os');
-
 /**
  * Main class to handle the logic of the File Templates
  * @export
@@ -37,8 +36,8 @@ export default class TemplatesManager {
      * @param filename The name of the template file.
      * @return Buffer
      */
-    public getTemplate(filename): Buffer {
-        return fs.readFileSync(path.join(this.getTemplatesDir(), filename));
+    public getTemplate(filename): string {
+        return fs.readFileSync(path.join(this.getTemplatesDir(), filename), 'utf8');
     }
 
     /**
