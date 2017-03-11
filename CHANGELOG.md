@@ -14,3 +14,7 @@ All notable changes to this project are documented in this file.
 * fileFromTemplateCommand and templateFromFileCommand will now use the file-system path variable, instead of the standard path
 * Only files will be shown in the dropdown when creating a file from a template
 * When creating a template from a file, templateFromFileCommand will correctly create a file instead of attempting to write to the directory
+
+## 1.1.0 - Template variables
+
+* Add support for template variables - #8. Thanks @alexfruehwirth.
