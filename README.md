@@ -30,6 +30,19 @@ Selecting this option a list of available templates should appear. Just select y
 
 * Its also possible to do the other way around and create a template based on an open file. For that "right-click" on any opened file and you should see the option of the context menu.
 
+## Variables
+
+Variables can now be used in templates in the following way:
+
+```
+normal text #{variable_name}
+```
+
+When a file is created from the template, the user is prompted with a value to put here.
+
+### Predefined variables
+
+*  ```filename``` the output filename.
 
 ## Templates Location.
 
@@ -53,10 +66,10 @@ Windows:
 C:\Users\User\AppData\Roaming\Code\User\FileTemplates
 ```
 
-However, you can change the default location by adding the following to your "User Settings":..
+However, you can change the default location by adding the following to your user or workspace settings:
 
 ```
-fileTemplates.templates_dir: "path/to/my/templates"
+"fileTemplates.templates_dir": "path/to/my/templates"
 ```
 
 ## Contributing
