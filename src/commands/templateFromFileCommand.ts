@@ -41,8 +41,8 @@ export function run(templatesManager: TemplatesManager, args: any) {
                     if (choice === "Yes") {
                         vscode.workspace.openTextDocument(templateFile).then((doc) => {
                             const editor = vscode.window.activeTextEditor;
-                            const column = editor.viewColumn;
-                            vscode.window.showTextDocument(doc, column);
+
+                            vscode.window.showTextDocument(doc, editor.viewColumn);
                         });
                     }
                 });
