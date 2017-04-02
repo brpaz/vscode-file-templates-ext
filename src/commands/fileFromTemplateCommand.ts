@@ -91,7 +91,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
                     if (err) {
                         vscode.window.showErrorMessage(err.message);
                     }
-                    vscode.window.showInformationMessage(filename + " created");
+
                     vscode.workspace.openTextDocument(fullname).then((doc) => {
                         vscode.window.showTextDocument(doc);
                     });
