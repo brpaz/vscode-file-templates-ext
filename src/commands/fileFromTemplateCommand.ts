@@ -57,12 +57,13 @@ export function run(templatesManager: TemplatesManager, args: any) {
         };
 
         vscode.window.showInputBox(inputOptions).then(filename => {
+            let workspaceSettings = vscode.workspace.getConfiguration("file-templates");
+
             let fileContents = templatesManager.getTemplate(selection);
             const className = filename.replace(/\.[^/.]+$/, "");
-            const expression = /#{(\w+)}/g;
             const resultsPromise = [];
-            let regexResult = expression.exec(fileContents);
 
+            let regexResult = /#{(\w+)}/g.exec(fileContents);
             while (regexResult) {
                 const variableName = regexResult[1];
                 const regex = new RegExp(`#{${variableName}}`, "g");
@@ -86,31 +87,22 @@ export function run(templatesManager: TemplatesManager, args: any) {
                         break;
 
                     default:
-                        let variableInput = <vscode.InputBoxOptions> {
-                            prompt: `Please enter the desired value for "${variableName}"`
-                        };
-                        let variablePromise = new Promise((resolve, reject) => {
-                            vscode.window.showInputBox(variableInput).then(value => {
-                                if (!value) {
-                                    return;
-                                }
-                                fileContents = fileContents.replace(regex, value);
-                                resolve(fileContents);
-                            });
-                        });
-                        resultsPromise.push(variablePromise);
+                        if (workspaceSettings && workspaceSettings["default"] && workspaceSettings["default"][variableName]) {
+                            fileContents = fileContents.replace(regex, workspaceSettings["default"][variableName]);
+                        } else {
+                            fileContents = fileContents.replace(regex, variableName.toUpperCase());
+                        }
+                        break;
                 }
 
-                regexResult = expression.exec(fileContents);
+                regexResult = /#{(\w+)}/g.exec(fileContents);
             }
 
-            Promise.all(resultsPromise).then(() => {
-                fs.writeFile(path.join(targetFolder, filename), fileContents, function (err) {
-                    if (err) {
-                        vscode.window.showErrorMessage(err.message);
-                    }
-                    vscode.window.showInformationMessage(filename + " created");
-                });
+            fs.writeFile(path.join(targetFolder, filename), fileContents, function (err) {
+                if (err) {
+                    vscode.window.showErrorMessage(err.message);
+                }
+                vscode.window.showInformationMessage(filename + " created");
             });
         });
     });

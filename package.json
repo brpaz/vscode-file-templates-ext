@@ -23,6 +23,22 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "VSCode File Templates Configuration",
+      "properties": {
+        "file-templates.default.author": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Value to use to replace #{author} variable."
+        },
+        "file-templates.default.company": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Value to use to replace #{company} variable."
+        }
+      }
+    },
     "commands": [
       {
         "command": "extension.fileFromTemplate",
