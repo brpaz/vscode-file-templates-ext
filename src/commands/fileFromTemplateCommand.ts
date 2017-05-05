@@ -51,7 +51,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
 
         // ask for filename
         let inputOptions = <vscode.InputBoxOptions> {
-            prompt: "Please enter the desired filename",
+            prompt: "Please enter the desired file name",
             value: selection,
         };
 
