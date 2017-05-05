@@ -58,5 +58,8 @@
     "tslint": "^3.13.0",
     "typescript": "^1.8.5",
     "vscode": "^0.11.0"
+  },
+  "dependencies": {
+    "moment": "^2.18.1"
   }
 }
