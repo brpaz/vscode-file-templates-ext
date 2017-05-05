@@ -5,6 +5,7 @@ import fs = require("fs");
 import path = require("path");
 import TemplatesManager from "../templatesManager";
 import helpers = require("../helpers");
+import moment = require("moment");
 
 /**
  * Main command to create a file from a template.
@@ -65,23 +66,41 @@ export function run(templatesManager: TemplatesManager, args: any) {
             while (regexResult) {
                 const variableName = regexResult[1];
                 const regex = new RegExp(`#{${variableName}}`, "g");
-                if (variableName !== "filename") {
-                    let variableInput = <vscode.InputBoxOptions> {
-                        prompt: `Please enter the desired value for "${variableName}"`
-                    };
-                    let variablePromise = new Promise((resolve, reject) => {
-                        vscode.window.showInputBox(variableInput).then(value => {
-                            if (!value) {
-                                return;
-                            }
-                            fileContents = fileContents.replace(regex, value);
-                            resolve(fileContents);
+
+                switch (variableName) {
+                    case "filename":
+                        fileContents = fileContents.replace(regex, className);
+                        break;
+
+                    case "filepath":
+                        let workspaceRoot = vscode.workspace.rootPath;
+                        fileContents = fileContents.replace(regex, targetFolder.replace(`${workspaceRoot}/`, ""));
+                        break;
+
+                    case "year":
+                        fileContents = fileContents.replace(regex, moment().format("YYYY"));
+                        break;
+
+                    case "date":
+                        fileContents = fileContents.replace(regex, moment().format("D MMM YYYY"));
+                        break;
+
+                    default:
+                        let variableInput = <vscode.InputBoxOptions> {
+                            prompt: `Please enter the desired value for "${variableName}"`
+                        };
+                        let variablePromise = new Promise((resolve, reject) => {
+                            vscode.window.showInputBox(variableInput).then(value => {
+                                if (!value) {
+                                    return;
+                                }
+                                fileContents = fileContents.replace(regex, value);
+                                resolve(fileContents);
+                            });
                         });
-                    });
-                    resultsPromise.push(variablePromise);
-                } else {
-                    fileContents = fileContents.replace(regex, className);
+                        resultsPromise.push(variablePromise);
                 }
+
                 regexResult = expression.exec(fileContents);
             }
 
@@ -93,7 +112,6 @@ export function run(templatesManager: TemplatesManager, args: any) {
                     vscode.window.showInformationMessage(filename + " created");
                 });
             });
-
         });
     });
 }
