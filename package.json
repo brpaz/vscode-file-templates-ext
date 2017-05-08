@@ -27,12 +27,12 @@
       "type": "object",
       "title": "VSCode File Templates Configuration",
       "properties": {
-        "file-templates.default.author": {
+        "fileTemplates.author": {
           "type": ["string", "null"],
           "default": null,
           "description": "Value to use to replace #{author} variable."
         },
-        "file-templates.default.company": {
+        "fileTemplates.company": {
           "type": ["string", "null"],
           "default": null,
           "description": "Value to use to replace #{company} variable."

@@ -57,7 +57,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
         };
 
         vscode.window.showInputBox(inputOptions).then(filename => {
-            let workspaceSettings = vscode.workspace.getConfiguration("file-templates");
+            let workspaceSettings = vscode.workspace.getConfiguration("fileTemplates");
 
             let fileContents = templatesManager.getTemplate(selection);
             const className = filename.replace(/\.[^/.]+$/, "");
@@ -87,8 +87,8 @@ export function run(templatesManager: TemplatesManager, args: any) {
                         break;
 
                     default:
-                        if (workspaceSettings && workspaceSettings["default"] && workspaceSettings["default"][variableName]) {
-                            fileContents = fileContents.replace(regex, workspaceSettings["default"][variableName]);
+                        if (workspaceSettings && workspaceSettings[variableName]) {
+                            fileContents = fileContents.replace(regex, workspaceSettings[variableName]);
                         } else {
                             fileContents = fileContents.replace(regex, variableName.toUpperCase());
                         }
