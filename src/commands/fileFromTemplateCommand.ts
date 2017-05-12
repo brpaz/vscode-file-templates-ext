@@ -24,7 +24,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
     let targetFolder = args ? args.fsPath : vscode.workspace.rootPath;
 
     if (templates.length === 0) {
-        let optionGoToTemplates = <vscode.MessageItem>{
+        let optionGoToTemplates = <vscode.MessageItem> {
             title: "Open Templates Folder"
         };
 
@@ -51,7 +51,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
         }
 
         // ask for filename
-        let inputOptions = <vscode.InputBoxOptions>{
+        let inputOptions = <vscode.InputBoxOptions> {
             prompt: "Please enter the desired file name",
             value: selection,
         };
@@ -65,18 +65,18 @@ export function run(templatesManager: TemplatesManager, args: any) {
 
             let expression = /#{(\w+)}/g;
 
-            var matches;
-            var placeholders = [];
-            while (matches = expression.exec(fileContents)) {
-                if (placeholders.indexOf(matches[0]) != -1) {
-                    continue;
+            let placeholders = [];
+            let matches = expression.exec(fileContents);
+            while (matches) {
+                if (placeholders.indexOf(matches[0]) === -1) {
+                    placeholders.push(matches[0]);
                 }
-                placeholders.push(matches[0]);
+                matches = expression.exec(fileContents);
             }
 
             placeholders.forEach(function (placeholder) {
                 const variableName = /#{(\w+)}/.exec(placeholder)[1];
-                const search = new RegExp(placeholder, 'g')
+                const search = new RegExp(placeholder, "g");
 
                 switch (variableName) {
                     case "filename":
@@ -96,7 +96,7 @@ export function run(templatesManager: TemplatesManager, args: any) {
                         if (workspaceSettings && workspaceSettings[variableName]) {
                             fileContents = fileContents.replace(search, workspaceSettings[variableName]);
                         } else {
-                            let variableInput = <vscode.InputBoxOptions>{
+                            let variableInput = <vscode.InputBoxOptions> {
                                 prompt: `Please enter the desired value for "${variableName}"`
                             };
                             let variablePromise = new Promise((resolve, reject) => {
