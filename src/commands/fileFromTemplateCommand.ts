@@ -86,11 +86,17 @@ export function run(templatesManager: TemplatesManager, args: any) {
             }
 
             Promise.all(resultsPromise).then(() => {
+                const fullname = path.join(targetFolder, filename);
                 fs.writeFile(path.join(targetFolder, filename), fileContents, function (err) {
                     if (err) {
                         vscode.window.showErrorMessage(err.message);
                     }
-                    vscode.window.showInformationMessage(filename + " created");
+
+                    vscode.workspace.openTextDocument(fullname).then((doc) => {
+                        const editor = vscode.window.activeTextEditor;
+
+                        vscode.window.showTextDocument(doc, editor.viewColumn);
+                    });
                 });
             });
 
