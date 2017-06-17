@@ -37,7 +37,15 @@ export function run(templatesManager: TemplatesManager, args: any) {
             if (err) {
                 vscode.window.showErrorMessage(err.message);
             } else {
-                vscode.window.showInformationMessage("Template created");
+                vscode.window.showQuickPick(["Yes", "No"], { placeHolder: "Edit the new template?" }).then((choice) => {
+                    if (choice === "Yes") {
+                        vscode.workspace.openTextDocument(templateFile).then((doc) => {
+                            const editor = vscode.window.activeTextEditor;
+
+                            vscode.window.showTextDocument(doc, editor.viewColumn);
+                        });
+                    }
+                });
             }
 
         });
