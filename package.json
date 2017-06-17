@@ -23,6 +23,22 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "VSCode File Templates Configuration",
+      "properties": {
+        "fileTemplates.author": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Value to use to replace #{author} variable."
+        },
+        "fileTemplates.company": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Value to use to replace #{company} variable."
+        }
+      }
+    },
     "commands": [
       {
         "command": "extension.fileFromTemplate",
@@ -58,5 +74,8 @@
     "tslint": "^3.13.0",
     "typescript": "^1.8.5",
     "vscode": "^0.11.0"
+  },
+  "dependencies": {
+    "moment": "^2.18.1"
   }
 }

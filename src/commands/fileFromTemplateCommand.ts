@@ -5,6 +5,7 @@ import fs = require("fs");
 import path = require("path");
 import TemplatesManager from "../templatesManager";
 import helpers = require("../helpers");
+import moment = require("moment");
 
 /**
  * Main command to create a file from a template.
@@ -51,39 +52,71 @@ export function run(templatesManager: TemplatesManager, args: any) {
 
         // ask for filename
         let inputOptions = <vscode.InputBoxOptions> {
-            prompt: "Please enter the desired filename",
+            prompt: "Please enter the desired file name",
             value: selection,
         };
 
         vscode.window.showInputBox(inputOptions).then(filename => {
+            let workspaceSettings = vscode.workspace.getConfiguration("fileTemplates");
+
             let fileContents = templatesManager.getTemplate(selection);
             const className = filename.replace(/\.[^/.]+$/, "");
-            const expression = /#{(\w+)}/g;
             const resultsPromise = [];
-            let regexResult = expression.exec(fileContents);
 
-            while (regexResult) {
-                const variableName = regexResult[1];
-                const regex = new RegExp(`#{${variableName}}`, "g");
-                if (variableName !== "filename") {
-                    let variableInput = <vscode.InputBoxOptions> {
-                        prompt: `Please enter the desired value for "${variableName}"`
-                    };
-                    let variablePromise = new Promise((resolve, reject) => {
-                        vscode.window.showInputBox(variableInput).then(value => {
-                            if (!value) {
-                                return;
-                            }
-                            fileContents = fileContents.replace(regex, value);
-                            resolve(fileContents);
-                        });
-                    });
-                    resultsPromise.push(variablePromise);
-                } else {
-                    fileContents = fileContents.replace(regex, className);
+            let expression = /#{(\w+)}/g;
+
+            let placeholders = [];
+            let matches = expression.exec(fileContents);
+            while (matches) {
+                if (placeholders.indexOf(matches[0]) === -1) {
+                    placeholders.push(matches[0]);
                 }
-                regexResult = expression.exec(fileContents);
+                matches = expression.exec(fileContents);
             }
+
+            placeholders.forEach(function (placeholder) {
+                const variableName = /#{(\w+)}/.exec(placeholder)[1];
+                const search = new RegExp(placeholder, "g");
+
+                switch (variableName) {
+                    case "filename":
+                        fileContents = fileContents.replace(search, className);
+                        break;
+                    case "filepath":
+                        let workspaceRoot = vscode.workspace.rootPath;
+                        fileContents = fileContents.replace(search, targetFolder.replace(`${workspaceRoot}/`, ""));
+                        break;
+                    case "year":
+                        fileContents = fileContents.replace(search, moment().format("YYYY"));
+                        break;
+                    case "date":
+                        fileContents = fileContents.replace(search, moment().format("D MMM YYYY"));
+                        break;
+                    default:
+                        if (workspaceSettings && workspaceSettings[variableName]) {
+                            fileContents = fileContents.replace(search, workspaceSettings[variableName]);
+                        } else {
+                            let variableInput = <vscode.InputBoxOptions> {
+                                prompt: `Please enter the desired value for "${variableName}"`
+                            };
+                            let variablePromise = new Promise((resolve, reject) => {
+                                vscode.window.showInputBox(variableInput).then(value => {
+                                    let replacement;
+                                    if (!value) {
+                                        replacement = variableName.toUpperCase();
+                                    } else {
+                                        replacement = value;
+                                    }
+
+                                    fileContents = fileContents.replace(search, replacement);
+                                    resolve(fileContents);
+                                });
+                            });
+                            resultsPromise.push(variablePromise);
+                        }
+                        break;
+                }
+            });
 
             Promise.all(resultsPromise).then(() => {
                 const fullname = path.join(targetFolder, filename);
@@ -99,7 +132,6 @@ export function run(templatesManager: TemplatesManager, args: any) {
                     });
                 });
             });
-
         });
     });
 }

@@ -24,7 +24,10 @@ export default class TemplatesManager {
         // @TODO make this async (use promises ???)
         let templateDir: string = this.getTemplatesDir();
         let templateFiles: string[] = fs.readdirSync(templateDir).map(function (item) {
-            return fs.statSync(path.join(templateDir, item)).isFile() ? item : null;
+            if (!/^\./.exec(item)) {
+                return fs.statSync(path.join(templateDir, item)).isFile() ? item : null;
+            }
+            return null;
         }).filter(function (filename) {
             return filename !== null;
         });
